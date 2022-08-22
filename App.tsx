@@ -10,7 +10,7 @@ type Time = {
 
 export default function App() {
 	const timerRef = useRef();
-	const [seconds, setSeconds] = useState<number>(1500);
+	const [seconds, setSeconds] = useState<number>(10);
 	const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
 	const [time, setTime] = useState<Time>({
 		hours: 0,
@@ -40,6 +40,14 @@ export default function App() {
 		setTime(timeLeftVar);
 	}, []);
 
+  useEffect(() => {
+    // Check if we're at zero.
+    if (seconds === 0) {
+      clearInterval(timerRef.current);
+      setIsTimerRunning(false);
+    }
+  }, [seconds])
+  
 	const startTimer = () => {
 		if (seconds > 0) {
 			timerRef.current = setInterval(countDown, 1000);
@@ -59,11 +67,6 @@ export default function App() {
       setTime(secondsToTime(newVal));
       return newVal
     });
-		// Check if we're at zero.
-		if (seconds === 0) {
-			clearInterval(timerRef.current);
-			setIsTimerRunning(false);
-		}
 	};
 
 	return (
