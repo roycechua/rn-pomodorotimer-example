@@ -8,9 +8,11 @@ type Time = {
 	seconds: number;
 };
 
+const DEFAULT_TIME = 10; // seconds
+
 export default function App() {
 	const timerRef = useRef();
-	const [seconds, setSeconds] = useState<number>(10);
+	const [seconds, setSeconds] = useState<number>(DEFAULT_TIME);
 	const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
 	const [time, setTime] = useState<Time>({
 		hours: 0,
@@ -40,14 +42,18 @@ export default function App() {
 		setTime(timeLeftVar);
 	}, []);
 
-  useEffect(() => {
-    // Check if we're at zero.
-    if (seconds === 0) {
-      clearInterval(timerRef.current);
-      setIsTimerRunning(false);
-    }
-  }, [seconds])
-  
+	useEffect(() => {
+		// Check if we're at zero.
+		if (seconds === 0) {
+			clearInterval(timerRef.current);
+			setSeconds((currentValue) => {
+				setTime(secondsToTime(DEFAULT_TIME));
+				return DEFAULT_TIME;
+			});
+			setIsTimerRunning(false);
+		}
+	}, [seconds]);
+
 	const startTimer = () => {
 		if (seconds > 0) {
 			timerRef.current = setInterval(countDown, 1000);
@@ -63,10 +69,10 @@ export default function App() {
 	const countDown = () => {
 		// Remove one second, set state so a re-render happens.
 		setSeconds((secondsRemaining) => {
-      const newVal = secondsRemaining - 1;
-      setTime(secondsToTime(newVal));
-      return newVal
-    });
+			const newVal = secondsRemaining - 1;
+			setTime(secondsToTime(newVal));
+			return newVal;
+		});
 	};
 
 	return (
