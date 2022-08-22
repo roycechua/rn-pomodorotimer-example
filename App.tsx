@@ -78,9 +78,10 @@ export default function App() {
 	return (
 		<View style={styles.container}>
 			<View>
-				<Text>
-					{time.minutes} : {time.seconds}
+				<Text style={{ fontSize:110, fontWeight: 'bold' }}>
+					{time.minutes < 10 ? `0${time.minutes}` : time.minutes} : {time.seconds < 10 ? `0${time.seconds}` : time.seconds}
 				</Text>
+        <View style={{margin:10}}/>
 				{isTimerRunning ? (
 					<Button onPress={pauseTimer} title='Pause' />
 				) : (
